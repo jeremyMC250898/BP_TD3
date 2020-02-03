@@ -33,6 +33,7 @@ def refreshDataCandle(pair="BTCUSDT", duration="5m"):
     url="https://api.binance.com/api/v3/klines?symbol=%s&interval=%s&limit=1" %(pair, duration)
     response=requests.get(url)
     response_json = response.json() 
+    pprint.pprint(response_json)
     return response_json
 
 def creation_table(pair, duration,conn):
@@ -86,7 +87,7 @@ def createOrder(api_key,secret_key, direction, price, amount, pair="BTCUSD_d",or
     b= requests.Request(method='POST', url=query, headers=header)
     print(b)
 
-def cancerOrder(api_key, secret_key, uuid):
+def cancerOrder(api_key, secret_key, pair):
     firstquery="symbol="+pair+"&timestamp="+str(round(time.time() * 1000))
     a= hmac.new(bytes(secret_key,encoding='utf-8'), bytes(firstquery,encoding='utf-8'),hashlib.sha256).hexdigest()
     query="https://api.binance.com/api/v3/order?"+firstquery+"&signature="+a
@@ -98,4 +99,36 @@ secret_key="NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j" #s
 api_key="vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" #api key from api binance docs, for test
 
 #createOrder(api_key,secret_key,"BUY","50","100")
+
+print("Quelle fonction voulez vous lancer, Tapez le numero correspondant : ")
+print("1- displayAllAsset")
+print("2- displayBidAsk")
+print("3- displayOrderBook")
+print("4- refreshDataCandle")
+print("5- Actualisation bougie dans la base de donnée, Attention pour arreter cette fonction il faut faire CTRL C")
+print("6- CreateOrder")
+print("7- CancelOrder")
+a=input()
+if a=='1':
+    displayAllAsset()
+else:
+    if a=='2':
+        displayBidAsk()
+    else:
+        if a=='3':
+            displayOrderBook()
+        else:
+            if a=='4':
+                refreshDataCandle()
+            else:
+                if a=='5':
+                    connection_sql()
+                else:
+                    if a=='6':
+                        createOrder(api_key,secret_key,"BUY","50","100")
+                    else:
+                        if a=='7':
+                            cancerOrder(api_key,secret_key,"BTCUSDT")
+                        else:
+                            print("choix non valide.")
 
